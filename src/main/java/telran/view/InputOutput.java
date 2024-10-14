@@ -41,52 +41,77 @@ public interface InputOutput {
 	 */
 	default Integer readInt(String prompt, String errorPrompt)
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		Double tmp = readDouble(prompt, errorPrompt);
+		return Double.valueOf(tmp).intValue();
 	}
 
 	default Long readLong(String prompt, String errorPrompt)
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		Double tmp = readDouble(prompt, errorPrompt);
+		return Double.valueOf(tmp).longValue();
 	}
 
 	default Double readDouble(String prompt, String errorPrompt)
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		return readObject(prompt, errorPrompt, input -> {
+			try {
+				return Double.parseDouble(input);
+			} catch (NumberFormatException e) {
+				throw new IllegalArgumentException("Invalid double format");
+			}
+		});
 	}
 
 	default Double readNumberRange(String prompt, String errorPrompt, double min, double max)
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		double res = readDouble(prompt, errorPrompt);
+		if (res < min || res > max) {
+			throw new IllegalArgumentException(errorPrompt);
+		}
+
+		return res;
 	}
 
 	default String readStringPredicate(String prompt, String errorPrompt,
 			Predicate<String> predicate)
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		String res = readString(prompt);
+		if (!predicate.test(res)) {
+			throw new IllegalArgumentException(errorPrompt);
+		}
+
+		return res;
 	}
 
 	default String readStringOptions(String prompt, String errorPrompt,
 			HashSet<String> options)
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		String res = readString(prompt);
+		if (!options.contains(res)) {
+			throw new IllegalArgumentException(errorPrompt);
+		}
+		return res;
 	}
 
 	default LocalDate readIsoDate(String prompt, String errorPrompt)
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		return readObject(prompt, errorPrompt, input -> {
+			try {
+				return LocalDate.parse(input);
+			} catch (NumberFormatException e) {
+				throw new IllegalArgumentException(errorPrompt);
+			}
+		});
 	}
 
 	default LocalDate readIsoDateRange(String prompt, String errorPrompt, LocalDate from,
 			LocalDate to)
 	{
-		//TODO
-		throw new UnsupportedOperationException();
+		LocalDate res = readIsoDate(prompt, "Illegal date format");
+		if (res.compareTo(from) > 0 || res.compareTo(to) < 0) {
+			throw new IllegalArgumentException(errorPrompt);
+		}
+
+		return res;
 	}
 }
