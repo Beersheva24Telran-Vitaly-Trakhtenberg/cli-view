@@ -17,7 +17,7 @@ public interface InputOutput {
 
 	default  <T> T readObject(String prompt, String error_prompt, Function<String, T> mapper)
 	{
-		boolean running = false;
+		boolean running;
 		T res = null;
 		do {
 			running = false;
