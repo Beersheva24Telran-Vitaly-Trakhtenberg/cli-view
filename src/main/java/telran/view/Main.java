@@ -78,8 +78,8 @@ public class Main
         LocalDate bd = io.readIsoDateRange(
                 "Enter birthdate (yyyy-mm-dd)",
                 "Incorrect age",
-                calculateMinDateAge(MIN_AGE),
-                calculateMaxDateAge(MAX_AGE)
+                calculateDateMinusYears(MIN_AGE),
+                calculateDateMinusYears(MAX_AGE)
         );
 
         // Department
@@ -105,13 +105,13 @@ public class Main
         io.writeLine(employee);
     }
 
-    static LocalDate calculateMinDateAge(int min_age)
+    static LocalDate calculateDateMinusYears(int min_age)
     {
         return LocalDate.now().minusYears(min_age);
     }
 
-    static LocalDate calculateMaxDateAge(int max_age)
+    static LocalDate calculateDatePlusYears(int max_age)
     {
-        return LocalDate.now().minusYears(max_age);
+        return LocalDate.now().plusYears(max_age);
     }
 }
