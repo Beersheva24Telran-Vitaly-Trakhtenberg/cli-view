@@ -1,6 +1,8 @@
 package telran.view;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.HashSet;
 
 record Employee(long id, String name, LocalDate birth_date, String department, int salary){}
 
@@ -18,11 +20,13 @@ public class Main
     final static long MAX_ID = 999999;
     final static int MIN_AGE = 18;
     final static int MAX_AGE = 70;
+    final static int MIN_NAME_LENGTH = 3;
 
     /*********************************** */
     public static void main(String[] args)
     {
-        //readEmployeeAsObject();
+//        readEmployeeAsObject();
+//        readEmployeeBySeparateFieldsNoControls();
         readEmployeeBySeparateFields();
     }
 
@@ -39,7 +43,7 @@ public class Main
         io.writeLine("You are entered the following Employee data");
         io.writeLine(employee);
     }
-    static  void readEmployeeBySeparateFields()
+    static  void readEmployeeBySeparateFieldsNoControls()
     {
         String[] prompts = {"Enter Employee ID (int positive)", "Enter name", "Enter birthdate (yyyy-mm-dd)", "Enter department", "Enter salary (int positive)"};
         int number_details = prompts.length;
@@ -53,5 +57,61 @@ public class Main
 
         io.writeLine("You are entered the following Employee data");
         io.writeLine(employee);
+    }
+
+    static void readEmployeeBySeparateFields()
+    {
+        io.writeString("\033[1;31mEnter the Employee data:\033[0m");
+
+        // ID
+        Double d_id = io.readNumberRange("Enter Employee ID (" + Long.toString(MIN_ID) + "..." + Long.toString(MAX_ID) + "): ", "Entered incorrect ID", MIN_ID, MAX_ID);
+        long id = Double.valueOf(d_id).longValue();
+
+        // Name
+        String name = io.readStringPredicate(
+                "Enter name: ",
+                "Entered name has wrong format",
+                input -> input.length() >= MIN_NAME_LENGTH && input.matches("[A-Z][a-z]{2,}")
+        );
+
+        // Birthdate
+        LocalDate bd = io.readIsoDateRange(
+                "Enter birthdate (yyyy-mm-dd)",
+                "Incorrect age",
+                calculateMinDateAge(MIN_AGE),
+                calculateMaxDateAge(MAX_AGE)
+        );
+
+        // Department
+/*
+        String department = io.readStringPredicate(
+                "Enter department",
+                "Incorrect department",
+                input -> Arrays.asList(DEPARTMENTS).contains(input)
+        );
+*/
+        String department = io.readStringOptions(
+                "Enter department",
+                "Incorrect department",
+                new HashSet<>(Arrays.asList(DEPARTMENTS))
+        );
+
+        // Salary
+        double d_salary = io.readNumberRange("Enter salary", "Incorrect salary value", MIN_SALARY, MAX_SALARY);
+
+        Employee employee = new Employee(Double.valueOf(d_id).longValue(), name, bd, department, Double.valueOf(d_salary).intValue());
+
+        io.writeLine("You are entered the following Employee data");
+        io.writeLine(employee);
+    }
+
+    static LocalDate calculateMinDateAge(int min_age)
+    {
+        return LocalDate.now().minusYears(min_age);
+    }
+
+    static LocalDate calculateMaxDateAge(int max_age)
+    {
+        return LocalDate.now().minusYears(max_age);
     }
 }
