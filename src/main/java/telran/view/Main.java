@@ -20,11 +20,14 @@ public class Main
     final static int MAX_AGE = 70;
 
     /*********************************** */
-    public static void main(String[] args) {
-        readEmployeeAsObject();
+    public static void main(String[] args)
+    {
+        //readEmployeeAsObject();
+        readEmployeeBySeparateFields();
     }
 
-    static void readEmployeeAsObject() {
+    static void readEmployeeAsObject()
+    {
         Employee employee = io.readObject("Enter the Employee data in the format: \n" +
                         "[#id]#[Name]#[birthDate<yyyy-MM-dd>]#[Department]#[Salary]",
                 "Wrong format for Employee data", str -> {
@@ -36,8 +39,19 @@ public class Main
         io.writeLine("You are entered the following Employee data");
         io.writeLine(employee);
     }
-    static  void readEmployeeBySeparateFields() {
-        //TODO
-        //Enter ID, Enter name, Enter department, Enter salary, Enter birthdate
+    static  void readEmployeeBySeparateFields()
+    {
+        String[] prompts = {"Enter Employee ID (int positive)", "Enter name", "Enter birthdate (yyyy-mm-dd)", "Enter department", "Enter salary (int positive)"};
+        int number_details = prompts.length;
+        String[] tokens = new String[number_details];
+        io.writeString("Entered the Employee data:");
+        for (int i=0; i<number_details; i++) {
+            tokens[i] = io.readString(prompts[i] + ": ");
+        }
+        Employee employee = new Employee(Long.parseLong(tokens[0]), tokens[1], LocalDate.parse(tokens[2]),
+                tokens[3], Integer.parseInt(tokens[4]));
+
+        io.writeLine("You are entered the following Employee data");
+        io.writeLine(employee);
     }
 }
