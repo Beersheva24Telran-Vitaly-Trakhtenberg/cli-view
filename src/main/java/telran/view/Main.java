@@ -83,13 +83,6 @@ public class Main
         );
 
         // Department
-/*
-        String department = io.readStringPredicate(
-                "Enter department",
-                "Incorrect department",
-                input -> Arrays.asList(DEPARTMENTS).contains(input)
-        );
-*/
         String department = io.readStringOptions(
                 "Enter department",
                 "Incorrect department",
