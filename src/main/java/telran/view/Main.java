@@ -71,15 +71,15 @@ public class Main
         String name = io.readStringPredicate(
                 "Enter name: ",
                 "Entered name has wrong format",
-                input -> input.length() >= MIN_NAME_LENGTH && input.matches("[A-Z][a-z]{2,}")
+                input -> input.matches("[A-Z][a-z]{2,}")
         );
 
         // Birthdate
         LocalDate bd = io.readIsoDateRange(
                 "Enter birthdate (yyyy-mm-dd)",
                 "Incorrect age",
-                calculateDateMinusYears(MIN_AGE),
-                calculateDateMinusYears(MAX_AGE)
+                getDateLessByYears(MIN_AGE),
+                getDateLessByYears(MAX_AGE)
         );
 
         // Department
@@ -90,7 +90,12 @@ public class Main
         );
 
         // Salary
-        double d_salary = io.readNumberRange("Enter salary", "Incorrect salary value", MIN_SALARY, MAX_SALARY);
+        double d_salary = io.readNumberRange(
+                "Enter salary",
+                "Incorrect salary value",
+                MIN_SALARY,
+                MAX_SALARY
+        );
 
         Employee employee = new Employee(Double.valueOf(d_id).longValue(), name, bd, department, Double.valueOf(d_salary).intValue());
 
@@ -98,12 +103,12 @@ public class Main
         io.writeLine(employee);
     }
 
-    static LocalDate calculateDateMinusYears(int min_age)
+    static LocalDate getDateLessByYears(int min_age)
     {
         return LocalDate.now().minusYears(min_age);
     }
 
-    static LocalDate calculateDatePlusYears(int max_age)
+    static LocalDate getDateMoreByYears(int max_age)
     {
         return LocalDate.now().plusYears(max_age);
     }
