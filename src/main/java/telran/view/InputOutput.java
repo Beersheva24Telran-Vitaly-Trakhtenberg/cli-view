@@ -41,25 +41,17 @@ public interface InputOutput {
 	 */
 	default Integer readInt(String prompt, String errorPrompt)
 	{
-		Double tmp = readDouble(prompt, errorPrompt);
-		return Double.valueOf(tmp).intValue();
+		return readObject(prompt, errorPrompt, input -> Integer.parseInt(input));
 	}
 
 	default Long readLong(String prompt, String errorPrompt)
 	{
-		Double tmp = readDouble(prompt, errorPrompt);
-		return Double.valueOf(tmp).longValue();
+		return readObject(prompt, errorPrompt, input -> Long.parseLong(input));
 	}
 
 	default Double readDouble(String prompt, String errorPrompt)
 	{
-		return readObject(prompt, errorPrompt, input -> {
-			try {
-				return Double.parseDouble(input);
-			} catch (NumberFormatException e) {
-				throw new IllegalArgumentException("Invalid double format");
-			}
-		});
+		return readObject(prompt, errorPrompt, input -> Double.parseDouble(input));
 	}
 
 	default Double readNumberRange(String prompt, String errorPrompt, double min, double max)
@@ -107,8 +99,11 @@ public interface InputOutput {
 	default LocalDate readIsoDateRange(String prompt, String errorPrompt, LocalDate from,
 			LocalDate to)
 	{
+		if (to.isAfter(from)) {
+			throw new IllegalArgumentException("Invalid date range: 'from' date must be before 'to' date");
+		}
 		LocalDate res = readIsoDate(prompt, "Illegal date format");
-		if (res.compareTo(from) > 0 || res.compareTo(to) < 0) {
+		if (!(res.isBefore(from) && res.isAfter(to))) {
 			throw new IllegalArgumentException(errorPrompt);
 		}
 
