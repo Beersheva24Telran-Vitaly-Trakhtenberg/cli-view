@@ -87,13 +87,7 @@ public interface InputOutput {
 
 	default LocalDate readIsoDate(String prompt, String errorPrompt)
 	{
-		return readObject(prompt, errorPrompt, input -> {
-			try {
-				return LocalDate.parse(input);
-			} catch (NumberFormatException e) {
-				throw new IllegalArgumentException(errorPrompt);
-			}
-		});
+		return readObject(prompt, errorPrompt, input -> LocalDate.parse(input));
 	}
 
 	default LocalDate readIsoDateRange(String prompt, String errorPrompt, LocalDate from,
