@@ -10,17 +10,20 @@ public class Menu implements Item
     private String symbol = "_";
     private int n_symb = 20;
 
-    public void setSymbol(String symbol) {
+    public Menu(String menu_title, Item...items)
+    {
+        this.menu_name = menu_title;
+        this.items = Arrays.copyOf(items, items.length);
+    }
+
+    public void setSymbol(String symbol)
+    {
         this.symbol = symbol;
     }
 
-    public void setNSymbol(int n_symb) {
-        this.n_symb = n_symb;
-    }
-
-    public Menu(Item...items)
+    public void setNSymbol(int n_symb)
     {
-        this.items = Arrays.copyOf(items, items.length);
+        this.n_symb = n_symb;
     }
 
     @Override
@@ -35,21 +38,21 @@ public class Menu implements Item
         boolean running = true;
         do {
             displayItems(io);
-            int selectedItem = io.readNumberRange("Select item", "Wrong item number selection", 1, items.length).intValue();
+            int selectedItem = io.readNumberRange("Select item", "Wrong item's number selected", 1, items.length).intValue();
             item = items[selectedItem - 1];
             try {
                 item.perform(io);
                 running = !item.isExit();
             } catch (RuntimeException e) {
                 io.writeLine(e.getMessage());
-                running = false;
+                //running = false;
             }
         } while(running);
     }
 
     private void displayItems(InputOutput io)
     {
-        IntStream.range(0, items.length).forEach((i -> io.writeLine(String.format("%d. $s", i + 1, items[i].displayName()))));
+        IntStream.range(0, items.length).forEach((i -> io.writeLine(String.format("%d. %s", i + 1, items[i].displayName()))));
     }
 
     private void displayTitle(InputOutput io)
